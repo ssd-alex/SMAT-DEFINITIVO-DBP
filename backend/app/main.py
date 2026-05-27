@@ -169,3 +169,12 @@ def obtener_historial(id: int, db: Session = Depends(get_db)):
 )
 def obtener_stats(db: Session = Depends(get_db)):
     return crud.get_stats(db)
+
+@app.get(
+    "/lecturas/",
+    response_model=List[schemas.LecturaDB],
+    tags=["Telemetría de Sensores"],
+    summary="Listar todas las lecturas"
+)
+def listar_lecturas(db: Session = Depends(get_db)):
+    return crud.get_lecturas(db)

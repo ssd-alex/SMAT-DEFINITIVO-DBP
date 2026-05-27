@@ -44,6 +44,9 @@ def crear_lectura(db: Session, lectura: schemas.LecturaCreate):
     db.refresh(nueva)
     return nueva
 
+def get_lecturas(db: Session):
+    return db.query(models.LecturaDB).all()
+
 def get_lecturas_por_estacion(db: Session, estacion_id: int):
     return db.query(models.LecturaDB).filter(models.LecturaDB.estacion_id == estacion_id).all()
 
@@ -59,3 +62,4 @@ def get_stats(db: Session):
         "lectura_maxima": lectura_max.valor if lectura_max else 0,
         "estacion_critica": lectura_max.estacion_id if lectura_max else None
     }
+

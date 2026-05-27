@@ -4,6 +4,7 @@ import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import 'login_screen.dart';
 import 'add_estacion_screen.dart';
+import 'lecturas_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -80,6 +81,17 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Estaciones SMAT'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.water_drop),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LecturasScreen(),
+                ),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
               await AuthService().logout();
@@ -99,6 +111,8 @@ class _HomePageState extends State<HomePage> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('❌ ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No hay estaciones'));
           } else {
             return RefreshIndicator(
               onRefresh: () async => _refrescar(),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/estacion.dart';
+import '../models/lectura.dart';
 import 'auth_service.dart';
 
 class ApiService {
@@ -14,6 +15,28 @@ class ApiService {
       if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
         return jsonResponse.map((data) => Estacion.fromJson(data)).toList();
+      } else {
+        throw Exception('Error del servidor: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('No se pudo conectar con SMAT. ¿Está el servidor activo?');
+    }
+  }
+
+  Future<List<Lectura>> fetchLecturas() async {
+    final token = await AuthService().getToken();
+
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/lecturas/'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 5));
+
+      if (response.statusCode == 200) {
+        List jsonResponse = json.decode(response.body);
+        return jsonResponse.map((data) => Lectura.fromJson(data)).toList();
       } else {
         throw Exception('Error del servidor: ${response.statusCode}');
       }
